@@ -73,7 +73,7 @@
     }
     function gblendCountFor(username) {
       const seed = djb2("fluent:gblend:" + normalize(username));
-      const max = 9999;
+      const max = 600;
       return seed % (max + 1);
     }
     document.getElementById("form").addEventListener("submit", function (e) {
