@@ -1,67 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fluent Gblend Checker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluent Gblend Counter</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff;
-      color: purple;
       text-align: center;
-      margin-top: 50px;
+      background: linear-gradient(to right, black, purple);
+      color: purple;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    #container {
-      max-width: 400px;
-      margin: auto;
+    .logo {
+      width: 150px;
+      margin-bottom: 20px;
     }
-    input, button {
-      padding: 10px;
-      margin-top: 10px;
-      width: 80%;
+    .card {
+      background: white;
+      color: purple;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 300px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 20px;
+      margin: 10px 0;
     }
     button {
-      background-color: purple;
+      background: purple;
       color: white;
       border: none;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 16px;
     }
     button:hover {
-      background-color: #6a0dad;
+      background: darkviolet;
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <h2>Check your Gblend Count</h2>
-    <input type="text" id="username" placeholder="Enter your Twitter username" />
-    <br>
-    <button onclick="checkGblend()">Check</button>
-    <p id="result"></p>
+  <!-- Fluent Logo -->
+  <img src="/logo.jpg" alt="Fluent Logo" class="logo" />
+
+  <!-- Card Content -->
+  <div class="card">
+    <h1>Fluent Gblend Counter</h1>
+    <p>You’ve said <span id="count">0</span> times!</p>
+    <button onclick="increment()">+1 Gblend</button>
+    <button onclick="shareToX()">Share to X</button>
   </div>
 
+  <!-- Footer -->
+  <div class="footer">Made with love by kvng6ixx</div>
+
   <script>
-    function hashCode(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return hash;
+    let count = 0;
+
+    function increment() {
+      count++;
+      document.getElementById('count').textContent = count;
     }
 
-    function checkGblend() {
-      const username = document.getElementById("username").value.trim();
-      if (!username) {
-        document.getElementById("result").innerText = "Please enter a username.";
-        return;
-      }
-      const hash = Math.abs(hashCode(username));
-      const count = hash % 1000;
-      document.getElementById("result").innerText = 
-        `@${username}, you’ve said "gblend" ${count} times.`;
-    }
-  </script>
-</body>
-</html>
+    function shareToX() {
+      const text = `I’ve said gblend ${count} times on Fluent! #Fluent`;
+      const url = `https://twitter.com/intent/twe
