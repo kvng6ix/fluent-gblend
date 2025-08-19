@@ -7,93 +7,88 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: black;
+      color: purple;
       text-align: center;
-      background-color: #f9f9f9;
-      color: #4B0082; /* Purple like Fluent */
-      padding: 20px;
+      padding: 50px;
     }
-    img.logo {
-      width: 120px;
-      margin: 20px auto;
-      display: block;
+    .container {
+      max-width: 500px;
+      margin: auto;
     }
-    h1 {
-      margin-top: 10px;
-      font-size: 28px;
-    }
-    input, button {
+    input {
       padding: 10px;
-      margin: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      width: 80%;
+      margin-bottom: 20px;
     }
     button {
-      background-color: #4B0082;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    #result {
-      font-size: 20px;
-      margin-top: 20px;
-    }
-    #shareBtn {
-      display: none; /* hidden until result */
-      margin-top: 15px;
       padding: 10px 20px;
-      font-size: 16px;
-      background-color: #000;
-      color: white;
+      margin: 10px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      background-color: purple;
+      color: white;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    img.logo {
+      width: 100px;
+      display: block;
+      margin: 0 auto 20px auto;
     }
   </style>
 </head>
 <body>
-  <!-- Logo clickable link -->
-  <a href="https://x.com/fluentxyz" target="_blank">
-    <img src="logo.png" alt="Fluent Logo" class="logo">
-  </a>
+  <div class="container">
+    <!-- Clickable Logo centered -->
+    <a href="https://x.com/fluentxyz" target="_blank">
+      <img src="fluent-logo.png" alt="Fluent Logo" class="logo">
+    </a>
 
-  <h1>How many times have you said "gblend"?</h1>
-  
-  <input type="text" id="username" placeholder="Enter your Twitter username">
-  <button onclick="checkCount()">Check</button>
-  
-  <div id="result"></div>
-  <button id="shareBtn" onclick="shareToX()">Share to X</button>
+    <h1>Fluent Gblend Counter</h1>
+    <p>Enter your Twitter username to see how many times you've said "gblend".</p>
+    
+    <input type="text" id="username" placeholder="Enter your Twitter username">
+    <br>
+    <button onclick="checkGblend()">Check</button>
+    <div id="result"></div>
+
+    <!-- Share to X button (hidden until result is shown) -->
+    <div id="share-container" style="display:none;">
+      <button onclick="shareToX()">Share to X</button>
+    </div>
+  </div>
 
   <script>
-    function checkCount() {
-      const username = document.getElementById("username").value.trim();
-      if (!username) {
-        alert("Please enter a username");
+    function generateConsistentNumber(username) {
+      let hash = 0;
+      for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return Math.abs(hash % 100); // Random but consistent (0–99)
+    }
+
+    function checkGblend() {
+      const username = document.getElementById('username').value.trim();
+      if (username === "") {
+        document.getElementById('result').innerText = "Please enter a username.";
+        document.getElementById('share-container').style.display = "none";
         return;
       }
+      const count = generateConsistentNumber(username);
+      const resultText = `@${username}, you've said "gblend" ${count} times.`;
+      document.getElementById('result').innerText = resultText;
 
-      // Random count capped at 200
-      let count = Math.floor(Math.random() * 201);
-
-      document.getElementById("result").innerText = 
-        `@${username}, you’ve said "gblend" ${count} times!`;
-
-      // show share button
-      document.getElementById("shareBtn").style.display = "inline-block";
-
-      // save count for sharing
-      window.shareData = { username, count };
+      // Show share button
+      document.getElementById('share-container').style.display = "block";
     }
 
     function shareToX() {
-      if (!window.shareData) return;
-
-      const { username, count } = window.shareData;
-      const text = `I’ve said "gblend" ${count} times 😅\nCheck yours here: https://fluent-gblend.vercel.app/ #Fluent #gblend`;
-      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      const resultText = document.getElementById('result').innerText;
+      const url = "https://x.com/intent/tweet?text=" + encodeURIComponent(resultText + " 🚀 #Fluent #gblend");
       window.open(url, "_blank");
     }
   </script>
