@@ -1,116 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fluent Gblend Counter</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: black;
-      color: purple;
+      background: linear-gradient(90deg, #2a0a4d, #7C3AED);
+      color: #7C3AED;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      margin: 0;
     }
-    header {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-    header img {
-      height: 60px;
-    }
-    h1 {
-      margin-bottom: 20px;
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 320px;
     }
     input {
       padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid purple;
+      border: 2px solid #7C3AED;
+      border-radius: 8px;
+      width: 100%;
+      margin-bottom: 12px;
     }
     button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
+      background: #7C3AED;
       border: none;
-      border-radius: 5px;
-      background-color: purple;
       color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
       cursor: pointer;
+      margin-top: 8px;
     }
     #result {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-    #share {
-      margin-top: 15px;
-    }
-    footer {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      font-size: 14px;
-      color: purple;
+      margin-top: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <!-- Fluent Logo -->
-  <header>
-    <img src="logo.jpg" alt="Fluent Logo" />
-  </header>
-
-  <h1>Fluent Gblend Counter</h1>
-  <input id="username" type="text" placeholder="Enter your Twitter username" />
-  <button onclick="checkGblend()">Check</button>
-
-  <div id="result"></div>
-  <div id="share"></div>
-
-  <footer>
-    made with love by kvng6ixx
-  </footer>
+  <div class="card">
+    <h2>Fluent Gblend Counter</h2>
+    <p>Enter your Twitter username 👇</p>
+    <input type="text" id="username" placeholder="@yourhandle" />
+    <button onclick="checkGblend()">Check</button>
+    <div id="result"></div>
+  </div>
 
   <script>
-    function hashCode(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return hash;
+    function normalize(u) {
+      return (u || "").trim().replace(/^@/, "").toLowerCase();
     }
 
-    function seededRandom(seed) {
-      let x = Math.sin(seed) * 10000;
-      return x - Math.floor(x);
+    function djb2(str) {
+      let hash = 5381;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) + hash) + str.charCodeAt(i);
+        hash = hash & 0xffffffff;
+      }
+      return hash >>> 0;
+    }
+
+    function gblendCountFor(username) {
+      const seed = djb2("fluent:gblend:" + normalize(username));
+      return seed % 10000; // number between 0-9999
     }
 
     function checkGblend() {
-      const username = document.getElementById("username").value.trim();
-      if (!username) {
+      const user = document.getElementById("username").value;
+      if (!user) {
         document.getElementById("result").innerText = "Please enter a username.";
         return;
       }
-
-      const seed = hashCode(username);
-      const randomNum = Math.floor(seededRandom(seed) * 500);
-
-      document.getElementById("result").innerText = 
-        `@${username} has said "gblend" ${randomNum} times!`;
-
-      const shareText = `I’ve said "gblend" ${randomNum} times according to Fluent Gblend Counter! Check yours here:`;
-      const shareUrl = "https://your-vercel-app-link.com"; // replace with your deployed site link
-      const twitterIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-
-      document.getElementById("share").innerHTML = 
-        `<a href="${twitterIntent}" target="_blank">
-          <button>Share on X</button>
-        </a>`;
+      const count = gblendCountFor(user);
+      document.getElementById("result").innerText =
+        `@${normalize(user)} has said "gblend" ${count} times!`;
     }
   </script>
 </body>
