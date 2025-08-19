@@ -81,10 +81,25 @@
     let currentCount = 0;  // Store the current count for sharing
     
     function generateConsistentNumber(username) {  
-      let hash = 0;  
-      for (let i = 0; i < username.length; i++) {  
-        hash = username.charCodeAt(i) + ((hash << 5) - hash);  
-      }  
+      // Convert to lowercase to ensure case-insensitive consistency
+      const normalizedUsername = username.toLowerCase();
+      let hash = 5381; // Different starting seed
+      
+      // DJB2 hash algorithm with additional scrambling
+      for (let i = 0; i < normalizedUsername.length; i++) {  
+        const char = normalizedUsername.charCodeAt(i);
+        hash = ((hash << 5) + hash) + char; // hash * 33 + char
+        hash = hash ^ (hash >> 16); // Additional bit mixing
+      }
+      
+      // Multiple scrambling steps for more randomization
+      hash = Math.abs(hash);
+      hash = (hash * 1103515245 + 12345) & 0x7fffffff; // Linear congruential generator
+      hash = hash ^ (hash >> 11);
+      hash = hash ^ ((hash << 7) & 0x9d2c5680);
+      hash = hash ^ ((hash << 15) & 0xefc60000);
+      hash = hash ^ (hash >> 18);
+      
       return Math.abs(hash % 100); // Random but consistent (0–99)  
     }  
   
