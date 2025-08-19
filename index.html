@@ -32,17 +32,10 @@
     button:hover {
       background-color: #6a0dad;
     }
-    img {
-      max-width: 120px;
-      margin-bottom: 20px;
-    }
   </style>
 </head>
 <body>
   <div id="container">
-    <!-- Logo at the top -->
-    <img src="fluent-logo.png" alt="Fluent Logo" />
-
     <h2>Check your Gblend Count</h2>
     <input type="text" id="username" placeholder="Enter your Twitter username" />
     <br>
@@ -66,7 +59,7 @@
         return;
       }
       const hash = Math.abs(hashCode(username));
-      const count = hash % 1000; // keeps result consistent but random per username
+      const count = hash % 1000;
       document.getElementById("result").innerText = 
         `@${username}, you’ve said "gblend" ${count} times.`;
     }
