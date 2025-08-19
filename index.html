@@ -100,7 +100,7 @@
       hash = hash ^ ((hash << 15) & 0xefc60000);
       hash = hash ^ (hash >> 18);
       
-      return Math.abs(hash % 100); // Random but consistent (0–99)  
+      return 30 + Math.abs(hash % 170); // Random but consistent (30–199)  
     }  
   
     function checkGblend() {  
