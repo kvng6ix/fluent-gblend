@@ -80,7 +80,7 @@
         return;
       }
       const count = generateConsistentNumber(username);
-      const resultText = gblend `@fluentxyz gooners,i've said "gblend" ${count} times.Check yours at https://fluent-gblend.vercel.app/, lets see how expressive you are🎨`;
+      const resultText = `@${username}, you've said "gblend" ${count} times.`;
       document.getElementById('result').innerText = resultText;
 
       // Show share button
