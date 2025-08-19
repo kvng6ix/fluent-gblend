@@ -1,88 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fluent — Gblend Counter</title>
-  <style>
-    :root {
-      --purple: #7C3AED;
-      --bg: #F8F5FF;
-      --white: #ffffff;
-    }
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--purple);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .card {
-      background: var(--white);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(124,58,237,0.15);
-      padding: 28px;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-    }
-    input {
-      width: 70%;
-      padding: 10px;
-      border: 2px solid var(--purple);
-      border-radius: 10px;
-    }
-    button {
-      padding: 10px 15px;
-      background: var(--purple);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 20px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluent Gblend Counter</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="card">
+  <div class="container">
     <h1>Fluent Gblend Counter</h1>
-    <p>Type your Twitter username to see how many times you said “gblend”</p>
-    <form id="form">
-      <input id="username" type="text" placeholder="@yourname" />
-      <button type="submit">Check</button>
-    </form>
-    <div id="result" class="result"></div>
+    <input type="text" id="username" placeholder="Enter your Twitter username" />
+    <button id="check">Check</button>
+    <p id="result"></p>
+    <button id="share">Share to X</button>
   </div>
 
-  <script>
-    function normalize(u) {
-      return (u || "").trim().replace(/^@+/, "").toLowerCase();
-    }
-    function djb2(str) {
-      let hash = 5381;
-      for (let i = 0; i < str.length; i++) {
-        hash = ((hash << 5) + hash) + str.charCodeAt(i);
-      }
-      return hash >>> 0;
-    }
-    function gblendCountFor(username) {
-      const seed = djb2("fluent:gblend:" + normalize(username));
-      const max = 600;
-      return seed % (max + 1);
-    }
-    document.getElementById("form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const u = document.getElementById("username").value;
-      const count = gblendCountFor(u);
-      document.getElementById("result").textContent =
-        "@" + normalize(u) + " has said gblend " + count + " times.";
-    });
-  </script>
+  <footer>
+    <p>made with love by <strong>kvng6ixx</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
