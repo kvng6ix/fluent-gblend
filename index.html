@@ -10,7 +10,10 @@
       background-color: black;  
       color: purple;  
       text-align: center;  
-      padding: 50px;  
+      padding: 50px;
+      position: relative;
+      min-height: 100vh;
+      margin: 0;
     }  
     .container {  
       max-width: 500px;  
@@ -39,7 +42,15 @@
       width: 100px;  
       display: block;  
       margin: 0 auto 20px auto;  
-    }  
+    }
+    .credit {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      color: purple;
+      font-size: 14px;
+      font-style: italic;
+    }
   </style>  
 </head>  
 <body>  
@@ -61,7 +72,11 @@
       <button onclick="shareToX()">Share to X</button>  
     </div>
 
-  </div>    
+  </div>
+  
+  <!-- Credit in bottom right corner -->
+  <div class="credit">made by kvng6ixx</div>
+    
   <script>  
     let currentCount = 0;  // Store the current count for sharing
     
@@ -89,7 +104,7 @@
     }  
   
     function shareToX() {  
-      const shareText = `gblend @fluentxyz expressive minds, I've said gblend ${currentCount} times to show how expressive I am, how about you?\nCheck yours at https://fluent-gblend.vercel.app/🎨`;  
+      const shareText = `gblend @fluentxyz expressive minds, I've said gblend ${currentCount} times to show how expressive I am, how about you?\nCheck yours at https://fluent-gblend.vercel.app/`;  
       const url = "https://x.com/intent/tweet?text=" + encodeURIComponent(shareText);  
       window.open(url, "_blank");  
     }  
