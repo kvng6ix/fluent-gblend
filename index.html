@@ -1,65 +1,129 @@
-import { useState } from "react";
-
-export default function Home() {
-  const [username, setUsername] = useState("");
-  const [count, setCount] = useState(null);
-
-  function seededRandom(seed) {
-    let h = 0;
-    for (let i = 0; i < seed.length; i++) {
-      h = (h << 5) - h + seed.charCodeAt(i);
-      h |= 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluent Gblend Counter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: purple;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
     }
-    const x = Math.sin(h) * 10000;
-    return x - Math.floor(x);
-  }
+    /* Centered logo block */
+    header {
+      position: static;           /* no absolute positioning */
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: center;
+    }
+    header img {
+      height: 60px;
+      display: block;
+    }
+    h1 {
+      margin: 12px 0 20px 0;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid purple;
+      background: #111;
+      color: purple;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: purple;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    #share {
+      margin-top: 15px;
+    }
+    footer {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 14px;
+      color: purple;
+    }
+    a.logo-link { display: inline-block; }
+  </style>
+</head>
+<body>
+  <!-- Centered, clickable Fluent Logo -->
+  <header>
+    <a class="logo-link" href="https://x.com/fluentxyz" target="_blank" rel="noopener noreferrer">
+      <img src="logo.jpg" alt="Fluent Logo" />
+    </a>
+  </header>
 
-  const handleCheck = () => {
-    if (!username.trim()) return;
-    const seed = username.toLowerCase();
-    const randomNum = Math.floor(seededRandom(seed) * 500);
-    setCount(randomNum);
-  };
+  <h1>Fluent Gblend Counter</h1>
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-purple-400 font-sans p-4">
-      
-      {/* Logo centered & clickable */}
-      <a 
-        href="https://x.com/fluentxyz" 
-        target="_blank" 
-        rel="noopener noreferrer"
-      >
-        <img 
-          src="/logo.png" 
-          alt="Fluent Logo" 
-          className="w-20 h-20 mb-4 hover:scale-105 transition-transform duration-200"
-        />
-      </a>
+  <input id="username" type="text" placeholder="Enter your Twitter username" />
+  <button onclick="checkGblend()">Check</button>
 
-      <h1 className="text-3xl font-bold mb-4 text-center">
-        Fluent Gblend Checker
-      </h1>
+  <div id="result"></div>
+  <div id="share"></div>
 
-      <input
-        type="text"
-        placeholder="Enter your Twitter username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="px-4 py-2 rounded-lg text-black mb-4 w-64"
-      />
-      <button
-        onClick={handleCheck}
-        className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mb-4"
-      >
-        Check
-      </button>
+  <footer>
+    made with love by kvng6ixx
+  </footer>
 
-      {count !== null && (
-        <p className="text-xl">
-          @{username} has said "gblend" {count} times.
-        </p>
-      )}
-    </div>
-  );
-}
+  <script>
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return hash;
+    }
+
+    function seededRandom(seed) {
+      // deterministic pseudo-random from numeric seed
+      let x = Math.sin(seed) * 10000;
+      return x - Math.floor(x); // 0 <= r < 1
+    }
+
+    function checkGblend() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        document.getElementById("result").innerText = "Please enter a username.";
+        return;
+      }
+
+      const seed = hashCode(username.toLowerCase());
+      const randomNum = Math.floor(seededRandom(seed) * 500); // 0–499
+
+      document.getElementById("result").innerText =
+        `@${username} has said "gblend" ${randomNum} times!`;
+
+      const shareText = `I’ve said "gblend" ${randomNum} times according to Fluent Gblend Counter! Check yours here:`;
+      const shareUrl = window.location.origin + window.location.pathname; // your live site URL
+      const twitterIntent =
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+      document.getElementById("share").innerHTML =
+        `<a href="${twitterIntent}" target="_blank" rel="noopener noreferrer">
+          <button>Share on X</button>
+        </a>`;
+    }
+  </script>
+</body>
+</html>
