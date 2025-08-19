@@ -1,87 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fluent Gblend Counter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluent Gblend Checker</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(90deg, #2a0a4d, #7C3AED);
-      color: #7C3AED;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .card {
-      background: white;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      background-color: #fff;
+      color: purple;
       text-align: center;
-      width: 320px;
+      margin-top: 50px;
     }
-    input {
+    #container {
+      max-width: 400px;
+      margin: auto;
+    }
+    input, button {
       padding: 10px;
-      border: 2px solid #7C3AED;
+      margin-top: 10px;
+      width: 80%;
+      border: 1px solid purple;
       border-radius: 8px;
-      width: 100%;
-      margin-bottom: 12px;
     }
     button {
-      background: #7C3AED;
-      border: none;
+      background-color: purple;
       color: white;
-      padding: 10px 16px;
-      border-radius: 8px;
       cursor: pointer;
-      margin-top: 8px;
-    }
-    #result {
-      margin-top: 14px;
       font-weight: bold;
+    }
+    button:hover {
+      background-color: #6a0dad;
+    }
+    img {
+      max-width: 120px;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Fluent Gblend Counter</h2>
-    <p>Enter your Twitter username 👇</p>
-    <input type="text" id="username" placeholder="@yourhandle" />
+  <div id="container">
+    <!-- Logo at the top -->
+    <img src="fluent-logo.png" alt="Fluent Logo" />
+
+    <h2>Check your Gblend Count</h2>
+    <input type="text" id="username" placeholder="Enter your Twitter username" />
+    <br>
     <button onclick="checkGblend()">Check</button>
-    <div id="result"></div>
+    <p id="result"></p>
   </div>
 
   <script>
-    function normalize(u) {
-      return (u || "").trim().replace(/^@/, "").toLowerCase();
-    }
-
-    function djb2(str) {
-      let hash = 5381;
+    function hashCode(str) {
+      let hash = 0;
       for (let i = 0; i < str.length; i++) {
-        hash = ((hash << 5) + hash) + str.charCodeAt(i);
-        hash = hash & 0xffffffff;
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
       }
-      return hash >>> 0;
-    }
-
-    function gblendCountFor(username) {
-      const seed = djb2("fluent:gblend:" + normalize(username));
-      return seed % 10000; // number between 0-9999
+      return hash;
     }
 
     function checkGblend() {
-      const user = document.getElementById("username").value;
-      if (!user) {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
         document.getElementById("result").innerText = "Please enter a username.";
         return;
       }
-      const count = gblendCountFor(user);
-      document.getElementById("result").innerText =
-        `@${normalize(user)} has said "gblend" ${count} times!`;
+      const hash = Math.abs(hashCode(username));
+      const count = hash % 1000; // keeps result consistent but random per username
+      document.getElementById("result").innerText = 
+        `@${username}, you’ve said "gblend" ${count} times.`;
     }
   </script>
 </body>
