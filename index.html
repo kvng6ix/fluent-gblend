@@ -7,82 +7,111 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to right, black, purple);
+      background-color: black;
       color: purple;
-      height: 100vh;
-      margin: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    .logo {
-      width: 150px;
-      margin-bottom: 20px;
+    header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
     }
-    .card {
-      background: white;
-      color: purple;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      max-width: 300px;
-      width: 100%;
+    header img {
+      height: 60px;
     }
     h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    p {
-      font-size: 20px;
-      margin: 10px 0;
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid purple;
     }
     button {
-      background: purple;
-      color: white;
-      border: none;
+      margin-top: 10px;
       padding: 10px 20px;
-      margin: 10px 5px;
-      border-radius: 8px;
-      cursor: pointer;
       font-size: 16px;
-    }
-    button:hover {
-      background: darkviolet;
-    }
-    .footer {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      background-color: purple;
       color: white;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    #share {
+      margin-top: 15px;
+    }
+    footer {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 14px;
+      color: purple;
     }
   </style>
 </head>
 <body>
   <!-- Fluent Logo -->
-  <img src="/logo.jpg" alt="Fluent Logo" class="logo" />
+  <header>
+    <img src="logo.jpg" alt="Fluent Logo" />
+  </header>
 
-  <!-- Card Content -->
-  <div class="card">
-    <h1>Fluent Gblend Counter</h1>
-    <p>You’ve said <span id="count">0</span> times!</p>
-    <button onclick="increment()">+1 Gblend</button>
-    <button onclick="shareToX()">Share to X</button>
-  </div>
+  <h1>Fluent Gblend Counter</h1>
+  <input id="username" type="text" placeholder="Enter your Twitter username" />
+  <button onclick="checkGblend()">Check</button>
 
-  <!-- Footer -->
-  <div class="footer">Made with love by kvng6ixx</div>
+  <div id="result"></div>
+  <div id="share"></div>
+
+  <footer>
+    made with love by kvng6ixx
+  </footer>
 
   <script>
-    let count = 0;
-
-    function increment() {
-      count++;
-      document.getElementById('count').textContent = count;
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return hash;
     }
 
-    function shareToX() {
-      const text = `I’ve said gblend ${count} times on Fluent! #Fluent`;
-      const url = `https://twitter.com/intent/twe
+    function seededRandom(seed) {
+      let x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    }
+
+    function checkGblend() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        document.getElementById("result").innerText = "Please enter a username.";
+        return;
+      }
+
+      const seed = hashCode(username);
+      const randomNum = Math.floor(seededRandom(seed) * 500);
+
+      document.getElementById("result").innerText = 
+        `@${username} has said "gblend" ${randomNum} times!`;
+
+      const shareText = `I’ve said "gblend" ${randomNum} times according to Fluent Gblend Counter! Check yours here:`;
+      const shareUrl = "https://your-vercel-app-link.com"; // replace with your deployed site link
+      const twitterIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+      document.getElementById("share").innerHTML = 
+        `<a href="${twitterIntent}" target="_blank">
+          <button>Share on X</button>
+        </a>`;
+    }
+  </script>
+</body>
+</html>
